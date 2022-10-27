@@ -5,24 +5,45 @@ const book=require('../model/book_model');
 //Antaa kaikki kirjat
 router.get('/', 
     function(request, response) {
-        let data=book.getAllBooks();
-        response.send(data);
+        book.getAllBooks(function(err, dbResult){
+            if(err){
+                response.json(err);
+            }
+            else{
+                response.json(dbResult);
+            }
+
+        });
 });
 
 //Antaa yhden kirjan
 router.get('/:id',
     function(request, response){
         let id=request.params.id;
-        let data=book.getOneBook(id);
-        response.send(data);
+        console.log(id);
+        book.getOneBook(id, function(err,dbResult){
+            if(err){
+                response.json(err);
+            }
+            else{
+                response.json(dbResult[0]);
+            }
+        });
     }
 );
 
 //Lisää kirjan
 router.post('/',
     function(request,response){
-        let data=book.addBook(request.body);
-        response.send(data);
+        book.addBook(request.body,function(err,dbResult){
+            if(err){
+                response.json(err);
+            }
+            else{
+                response.json(dbResult);
+            }
+        });
+
     }
 );
 
@@ -30,8 +51,14 @@ router.post('/',
 router.put('/:id',
     function(request,response){
         let id=request.params.id;
-        let data=book.updateBook(id);
-        response.send(data);
+        book.updateBook(id,request.body,function(err,dbResult){
+            if(err){
+                response.json(err);
+            }
+            else{
+                response.json(dbResult.affectedRows);
+            }
+        });
     }
 );
 
@@ -39,8 +66,14 @@ router.put('/:id',
 router.delete('/:id',
     function(request,response){
         let id=request.params.id;
-        let data=book.deleteBook(id);
-        response.send(data);
+        book.deleteBook(id,function(err,dbResult){
+            if(err){
+                response.json(err);
+            }
+            else{
+                response.json(dbResult);
+            }
+        });
     }
 );
 
